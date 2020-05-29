@@ -1,0 +1,14 @@
+package com.deskera.sdk.common.dto.enums;
+
+public enum INVENTORY_TXN_TYPE {
+  STOCK_IN,
+  STOCK_OUT,
+  INVENTORY_TXN_CREATE,
+  INVENTORY_TXN_UPDATE,
+  INVENTORY_TXN_DELETE,
+
+  DROP_SHIP,
+  DROP_SHIP_CREATE,
+  DROP_SHIP_DELETE
+
+}

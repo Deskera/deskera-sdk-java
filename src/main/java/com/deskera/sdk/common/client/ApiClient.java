@@ -1,7 +1,9 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.util.constants.ApiConstants;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,105 +19,32 @@ import org.springframework.web.client.RestTemplate;
 @Data
 @Log4j2
 @PropertySource(value = {"classpath:/application.properties"})
-public abstract class ApiClient {
+@NoArgsConstructor
+public  class ApiClient extends EnvironmentEndpoints{
 
-  protected String oAuth2PartnerClientId;
+  protected static String oAuth2PartnerClientId;
 
-  protected RestTemplate restTemplate;
+  protected static RestTemplate restTemplate;
 
-  protected String oAuth2PartnerSecret;
+  protected static  String oAuth2PartnerSecret;
 
-  protected boolean isSandbox;
+  protected static ENVIRONMENT environment;
 
-  protected String deskeraApiHost;
+  protected static String deskeraApiHost;
 
-  protected String oAuth2PartnerRedirectUrl;
+  protected static  String oAuth2PartnerRedirectUrl;
 
   private static final String COLON = ":";
 
-  @Value(value = "${contactsByCodeSandbox}")
-  protected String contactsByCodeSandbox;
-
-  @Value(value = "${contactsBaseApiSandbox}")
-  protected String contactsBaseApiSandbox;
-
-  @Value(value = "${contactsUpdateByIdSandbox}")
-  protected String contactsUpdateByIdSandbox;
-
-  @Value(value = "${contactsCreateSandbox}")
-  protected String contactsCreateSandbox;
-
-  @Value(value = "${contactsByCode}")
-  protected String contactsByCode;
-
-  @Value(value = "${contactsBaseApi}")
-  protected String contactsBaseApi;
-
-  @Value(value = "${contactsUpdateById}")
-  protected String contactsUpdateById;
-
-  @Value(value = "${contactsCreate}")
-  protected String contactsCreate;
-
-  @Value(value = "${sandBoxBaseUrl}")
-  protected String sandBoxBaseUrl;
-
-  @Value(value = "${productionBaseUrl}")
-  protected String productionBaseUrl;
-
-  @Value(value = "${invoiceBaseApiSandbox}")
-  protected String invoiceBaseApiSandbox;
-
-  @Value(value = "${invoiceBaseApi}")
-  protected String invoiceBaseApi;
-
-  @Value(value = "${accountsBaseApi}")
-  protected String accountsBaseApi;
-
-  @Value(value = "${accountsBaseApiSandbox}")
-  protected String accountsBaseApiSandbox;
-
-  @Value(value = "${productsBaseApiSandbox}")
-  protected String productsBaseApiSandbox;
-
-  @Value(value = "${productsBaseApi}")
-  protected String productsBaseApi;
-
-  @Value(value = "${taxesBaseApiSandbox}")
-  protected String taxesBaseApiSandbox;
-
-  @Value(value = "${taxesBaseApi}")
-  protected String taxesBaseApi;
-
-  @Value(value = "${paymentsBaseApiSandbox}")
-  protected String paymentsBaseApiSandbox;
-
-  @Value(value = "${paymentsBaseApi}")
-  protected String paymentsBaseApi;
-
-  @Value(value = "${tenantsBaseApiSandbox}")
-  protected String tenantsBaseApiSandbox;
-
-  @Value(value = "${tenantsBaseApi}")
-  protected String tenantsBaseApi;
-
-  @Value(value = "${ordersBaseApiSandbox}")
-  protected String ordersBaseApiSandbox;
-
-  @Value(value = "${ordersBaseApi}")
-  protected String ordersBaseApi;
-
-  @Value(value = "${inventoriesBaseApiSandbox}")
-  protected String inventoriesBaseApiSandbox;
-
-  @Value(value = "${inventoriesBaseApi}")
-  protected String inventoriesBaseApi;
-
-  @Value(value = "${fulfillmentBaseApiSandbox}")
-  protected String fulfillmentBaseApiSandbox;
-
-  @Value(value = "${fulfillmentBaseApi}")
-  protected String fulfillmentBaseApi;
+  public ApiClient(String oAuth2PartnerClientId,
+      RestTemplate restTemplate, String oAuth2PartnerSecret,
+      ENVIRONMENT environment, String oAuth2PartnerRedirectUrl) {
+    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
+    this.restTemplate = restTemplate;
+    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
+    this.environment = environment;
+    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
+  }
 
   protected ResponseEntity<?> createUrl(final String endpoint,
       final HttpEntity httpEntity, final Class<?> clazz, final HttpMethod httpMethod) {
@@ -150,8 +79,8 @@ public abstract class ApiClient {
   }
 
   protected String getBase64AuthCodeFromClientIdAndSecret() {
-    final String clientId = this.getOAuth2PartnerClientId();
-    final String clientSecret = this.getOAuth2PartnerSecret();
+    final String clientId = oAuth2PartnerClientId;
+    final String clientSecret = oAuth2PartnerSecret;
     return new String(
         Base64.encodeBase64((clientId + COLON + clientSecret).getBytes()));
   }

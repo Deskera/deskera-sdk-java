@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.account.AccountDto;
 import com.deskera.sdk.common.dto.account.Accounts;
 import com.deskera.sdk.common.util.constants.ApiConstants;
@@ -30,22 +31,30 @@ public class AccountsApiClient extends ApiClient {
   private static final String GET_ACCOUNT_BY_ID_FAILURE_MSG = "Could not get Accounts by ID";
   private static final String GET_ACCOUNT_FAILURE_MSG = "Could not get Accounts ";
 
-  public AccountsApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public AccountsApiClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
-    if (isSandbox) {
-      this.getAccountsApi = this.accountsBaseApiSandbox;
-    } else {
-      this.getAccountsApi = this.accountsBaseApi;
+    switch (environment) {
+      case DEV:
+        this.getAccountsApi = this.accountsBaseApiDev;
+        break;
+      case QA:
+        this.getAccountsApi = this.accountsBaseApiQA;
+        break;
+      case PROD_US:
+        this.getAccountsApi = this.accountsBaseApiProdUS;
+        break;
+      case STAGING:
+        this.getAccountsApi = this.accountsBaseApiStaging;
+        break;
+      case PROD:
+        this.getAccountsApi = this.accountsBaseApiProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

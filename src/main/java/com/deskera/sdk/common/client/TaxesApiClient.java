@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.tax.Taxes;
 import com.deskera.sdk.common.util.constants.ApiConstants;
 import java.util.HashMap;
@@ -34,22 +35,30 @@ public class TaxesApiClient extends ApiClient {
 
   private final static String TAX_FETCH_FAILURE_MSG = "Could not get taxes";
 
-  public TaxesApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public TaxesApiClient() {
+  super();
   }
 
   @PostConstruct
   private void init() {
-    if (this.isSandbox) {
-      this.getAllTaxesUrl = this.taxesBaseApiSandbox;
-    } else {
-      this.getAllTaxesUrl = this.taxesBaseApi;
+    switch (environment) {
+      case DEV:
+        this.getAllTaxesUrl = this.taxesBaseApiDev;
+        break;
+      case QA:
+        this.getAllTaxesUrl = this.taxesBaseApiQA;
+        break;
+      case PROD_US:
+        this.getAllTaxesUrl = this.taxesBaseApiProdUS;
+        break;
+      case STAGING:
+        this.getAllTaxesUrl = this.taxesBaseApiStaging;
+        break;
+      case PROD:
+        this.getAllTaxesUrl = this.taxesBaseApiProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

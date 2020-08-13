@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.invoice.SalesInvoiceRequest;
 import com.deskera.sdk.common.dto.invoice.SalesInvoiceResponse;
 import com.deskera.sdk.common.util.constants.ApiConstants;
@@ -28,22 +29,30 @@ public class InvoicesApiClient extends ApiClient {
   private static final String CREATE_FAILURE_MSG = "Could not create Sales Invoice";
   private static final String FIND_SALES_INVOICE_FAILURE_MSG = "Could not find Sales Invoice";
 
-  public InvoicesApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public InvoicesApiClient() {
+   super();
   }
 
   @PostConstruct
   private void init() {
-    if (this.isSandbox) {
-      this.invoicesUrl = this.invoiceBaseApiSandbox;
-    } else {
-      this.invoicesUrl = this.invoiceBaseApi;
+    switch (environment) {
+      case DEV:
+        this.invoicesUrl = this.invoiceBaseApiDev;
+        break;
+      case QA:
+        this.invoicesUrl = this.invoiceBaseApiQA;
+        break;
+      case PROD_US:
+        this.invoicesUrl = this.invoiceBaseApiProdUS;
+        break;
+      case STAGING:
+        this.invoicesUrl = this.invoiceBaseApiStaging;
+        break;
+      case PROD:
+        this.invoicesUrl = this.invoiceBaseApiProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

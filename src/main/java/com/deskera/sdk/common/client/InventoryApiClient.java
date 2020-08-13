@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.inventory.SHIPMENT_DOCUMENT_STATUS;
 import com.deskera.sdk.common.dto.inventory.ShipmentDocumentDto;
 import com.deskera.sdk.common.dto.order.FulfillmentResponse;
@@ -34,27 +35,43 @@ public class InventoryApiClient extends ApiClient {
 
   public InventoryApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
       final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
+      final ENVIRONMENT environment) {
     this.oAuth2PartnerClientId = oAuth2PartnerClientId;
     this.restTemplate = restTemplate;
     this.oAuth2PartnerSecret = oAuth2PartnerSecret;
     this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+    this.environment = environment;
   }
 
-  public InventoryApiClient(final boolean isSandbox, final RestTemplate restTemplate) {
-    this.isSandbox = isSandbox;
-    this.restTemplate = restTemplate;
+  public InventoryApiClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
-    if (isSandbox) {
-      this.getShipmentOrders = this.inventoriesBaseApiSandbox + INVENTORY_DOCUMENTS;
-      this.getFulfillmentOrders = this.fulfillmentBaseApiSandbox;
-    } else {
-      this.getShipmentOrders = this.inventoriesBaseApi + INVENTORY_DOCUMENTS;
-      this.getFulfillmentOrders = this.fulfillmentBaseApi;
+    switch (environment){
+      case DEV:
+        this.getShipmentOrders = this.inventoriesBaseApiDev + INVENTORY_DOCUMENTS;
+        this.getFulfillmentOrders = this.fulfillmentBaseApiDev;
+        break;
+      case QA:
+        this.getShipmentOrders = this.inventoriesBaseApiQA + INVENTORY_DOCUMENTS;
+        this.getFulfillmentOrders = this.fulfillmentBaseApiQA;
+        break;
+      case PROD:
+        this.getShipmentOrders = this.inventoriesBaseApiProd + INVENTORY_DOCUMENTS;
+        this.getFulfillmentOrders = this.fulfillmentBaseApiProd;
+        break;
+      case STAGING:
+        this.getShipmentOrders = this.inventoriesBaseApiStaging + INVENTORY_DOCUMENTS;
+        this.getFulfillmentOrders = this.fulfillmentBaseApiStaging;
+        break;
+      case PROD_US:
+        this.getShipmentOrders = this.inventoriesBaseApiProdUS + INVENTORY_DOCUMENTS;
+        this.getFulfillmentOrders = this.fulfillmentBaseApiProdUS;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

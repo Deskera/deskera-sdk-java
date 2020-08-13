@@ -14,7 +14,7 @@ def getDate() {
 }
 
 if (System.getenv("releaseVersion") == null || System.getenv("releaseVersion").empty) {
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.2-SNAPSHOT'
 } else {
     def dateVersion = "${getDate()}";
     version = System.getenv("releaseVersion")

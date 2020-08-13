@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.order.FulfillmentRequest;
 import com.deskera.sdk.common.dto.order.FulfillmentResponse;
 import com.deskera.sdk.common.util.constants.ApiConstants;
@@ -31,23 +32,31 @@ public class OrdersApiClient extends ApiClient {
       ApiConstants.URL_SEPERATOR + ApiConstants.VERSION_CONST + ApiConstants.URL_SEPERATOR
           + ApiConstants.SALES_CONST + ApiConstants.URL_SEPERATOR + ApiConstants.FULFILLMENTS_CONST;
 
-  public OrdersApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public OrdersApiClient() {
+  super();
   }
 
 
   @PostConstruct
   private void init() {
-    if (isSandbox) {
-      this.createFulfillmentUri = this.ordersBaseApiSandbox + FULFILLMENT;
-    } else {
-      this.createFulfillmentUri = this.ordersBaseApi + FULFILLMENT;
+    switch (environment) {
+      case DEV:
+        this.createFulfillmentUri = this.ordersBaseApiDev + FULFILLMENT;
+        break;
+      case QA:
+        this.createFulfillmentUri = this.ordersBaseApiQA + FULFILLMENT;
+        break;
+      case PROD_US:
+        this.createFulfillmentUri = this.ordersBaseApiProdUS + FULFILLMENT;
+        break;
+      case STAGING:
+        this.createFulfillmentUri = this.ordersBaseApiStaging + FULFILLMENT;
+        break;
+      case PROD:
+        this.createFulfillmentUri = this.ordersBaseApiProd + FULFILLMENT;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

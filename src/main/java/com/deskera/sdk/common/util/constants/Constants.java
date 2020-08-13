@@ -61,7 +61,7 @@ public final class Constants {
   public static final String SEARCH = "search";
   public static final String FROM_DATE = "fromDate";
   public static final String TO_DATE = "toDate";
-
+  public static final String EMPTY_STRING = "";
 
   public static class DataTypes {
     public static final String STRING = "string";

@@ -12,8 +12,8 @@ import static com.deskera.sdk.common.util.constants.ErrorConstants.WAREHOUSE_DET
 import static com.deskera.sdk.common.util.constants.ErrorConstants.WAREHOUSE_LIST_ERROR;
 import static com.deskera.sdk.common.util.constants.ErrorConstants.WAREHOUSE_PRODUCTS_ERROR;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.FilterCriteria;
-import com.deskera.sdk.common.dto.inventory.InventoryValuation;
 import com.deskera.sdk.common.dto.inventory.StockAdjustmentDto;
 import com.deskera.sdk.common.dto.inventory.StockAdjustmentProductValuation;
 import com.deskera.sdk.common.dto.inventory.StockAdjustmentRequest;
@@ -321,24 +321,32 @@ public class InventoryClient extends ApiClient {
     }
   }
 
-  public InventoryClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public InventoryClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
     final String baseApi;
 
-    if (isSandbox) {
-      baseApi = this.inventoriesBaseApiSandbox;
-    } else {
-      baseApi = this.inventoriesBaseApi;
+    switch (environment) {
+      case DEV:
+        baseApi = this.inventoriesBaseApiDev;
+        break;
+      case QA:
+        baseApi = this.inventoriesBaseApiQA;
+        break;
+      case PROD_US:
+        baseApi = this.inventoriesBaseApiProdUS;
+        break;
+      case STAGING:
+        baseApi = this.inventoriesBaseApiStaging;
+        break;
+      case PROD:
+        baseApi = this.inventoriesBaseApiProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
 
     this.warehousesApi = baseApi + "/warehouses";

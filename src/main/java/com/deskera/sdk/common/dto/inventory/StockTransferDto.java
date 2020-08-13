@@ -29,6 +29,14 @@ public class StockTransferDto {
   @CsvBindByPosition(position = 4)
   private Date transferDate;
 
+  @CsvBindByName(column = "Source Warehouse Name")
+  @CsvBindByPosition(position = 5)
+  private String srcWarehouseName;
+
+  @CsvBindByName(column = "Destination Warehouse Name")
+  @CsvBindByPosition(position = 6)
+  private String destWarehouseName;
+
   private List<StockTransferItemDto> stockTransferItems;
 
 }

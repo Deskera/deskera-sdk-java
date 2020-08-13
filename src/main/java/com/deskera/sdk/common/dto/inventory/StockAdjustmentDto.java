@@ -44,6 +44,10 @@ public class StockAdjustmentDto {
   @CsvBindByPosition(position = 6)
   private String notes;
 
+  @CsvBindByName(column = "Warehouse Name")
+  @CsvBindByPosition(position = 7)
+  private String warehouseName;
+
   private List<StockAdjustmentItemDto> stockAdjustmentItems;
 
 }

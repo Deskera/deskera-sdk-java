@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.payment.ReceivePaymentDto;
 import com.deskera.sdk.common.util.constants.ApiConstants;
 import java.util.Objects;
@@ -28,22 +29,30 @@ public class PaymentsApiClient extends ApiClient {
 
   private final static String RECEIVE = ApiConstants.URL_SEPERATOR + ApiConstants.RECEIVE_CONST;
 
-  public PaymentsApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public PaymentsApiClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
-    if (this.isSandbox) {
-      this.receivePaymentUrl = this.paymentsBaseApiSandbox + this.RECEIVE;
-    } else {
-      this.receivePaymentUrl = this.paymentsBaseApi + this.RECEIVE;
+    switch (environment) {
+      case DEV:
+        this.receivePaymentUrl = this.paymentsBaseApiDev + this.RECEIVE;
+        break;
+      case QA:
+        this.receivePaymentUrl = this.paymentsBaseApiQA + this.RECEIVE;
+        break;
+      case PROD_US:
+        this.receivePaymentUrl = this.paymentsBaseApiProdUS + this.RECEIVE;
+        break;
+      case STAGING:
+        this.receivePaymentUrl = this.paymentsBaseApiStaging + this.RECEIVE;
+        break;
+      case PROD:
+        this.receivePaymentUrl = this.paymentsBaseApiProd + this.RECEIVE;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

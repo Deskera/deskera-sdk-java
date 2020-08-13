@@ -2,8 +2,8 @@ package com.deskera.sdk.common.client;
 
 import static com.deskera.sdk.common.util.constants.ErrorConstants.WAREHOUSE_PRODUCTS_ERROR;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.inventory.ProductShortInfo;
-import com.deskera.sdk.common.dto.inventory.WHProductResponse;
 import com.deskera.sdk.common.dto.product.ProductRequest;
 import com.deskera.sdk.common.dto.product.ProductResponse;
 import java.util.List;
@@ -31,22 +31,30 @@ public class ProductsApiClient extends ApiClient {
 
   private String productBriefInfoUrl;
 
-  public ProductsApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public ProductsApiClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
-    if (this.isSandbox) {
-      this.productUrl = this.productsBaseApiSandbox;
-    } else {
-      this.productUrl = this.productsBaseApi;
+    switch (environment) {
+      case DEV:
+        this.productUrl = this.productsBaseApiDev;
+        break;
+      case QA:
+        this.productUrl = this.productsBaseApiQA;
+        break;
+      case PROD_US:
+        this.productUrl = this.productsBaseApiProdUS;
+        break;
+      case STAGING:
+        this.productUrl = this.productsBaseApiStaging;
+        break;
+      case PROD:
+        this.productUrl = this.productsBaseApiProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
 
     this.productBriefInfoUrl = this.productUrl + "/brief";

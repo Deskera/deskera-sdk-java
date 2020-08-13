@@ -1,5 +1,6 @@
 package com.deskera.sdk.common.client;
 
+import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.contact.ContactAttributeUpdateDto;
 import com.deskera.sdk.common.dto.contact.ContactDto;
 import com.deskera.sdk.common.util.RestResponsePage;
@@ -38,26 +39,40 @@ public class ContactsApiClient extends ApiClient {
   private static final String CONTACT_UPDATE_FAILURE_MSG = "Could not update Contact";
   private static final String ALL_CONTACT_FETCH_FAILURE_MSG = "Could not get All Contacts";
 
-  public ContactsApiClient(final String oAuth2PartnerClientId, final RestTemplate restTemplate,
-      final String oAuth2PartnerSecret, final String oAuth2PartnerRedirectUrl,
-      final boolean isSandbox) {
-    this.oAuth2PartnerClientId = oAuth2PartnerClientId;
-    this.restTemplate = restTemplate;
-    this.oAuth2PartnerSecret = oAuth2PartnerSecret;
-    this.oAuth2PartnerRedirectUrl = oAuth2PartnerRedirectUrl;
-    this.isSandbox = isSandbox;
+  public ContactsApiClient() {
+    super();
   }
 
   @PostConstruct
   private void init() {
-    if (this.isSandbox) {
-      this.contactByCodeApiUrl = this.contactsByCodeSandbox;
-      this.updateContactByIdUrl = this.contactsUpdateByIdSandbox;
-      this.createContactApiUrl = this.contactsCreateSandbox;
-    } else {
-      this.contactByCodeApiUrl = this.contactsByCode;
-      this.updateContactByIdUrl = this.contactsUpdateById;
-      this.createContactApiUrl = this.contactsCreate;
+    switch (environment) {
+      case DEV:
+        this.contactByCodeApiUrl = this.contactsByCodeDev;
+        this.updateContactByIdUrl = this.contactsUpdateByIdDev;
+        this.createContactApiUrl = this.contactsCreateDev;
+        break;
+      case QA:
+        this.contactByCodeApiUrl = this.contactsByCodeQA;
+        this.updateContactByIdUrl = this.contactsUpdateByIdQA;
+        this.createContactApiUrl = this.contactsCreateQA;
+        break;
+      case PROD_US:
+        this.contactByCodeApiUrl = this.contactsByCodeProdUS;
+        this.updateContactByIdUrl = this.contactsUpdateByIdProdUS;
+        this.createContactApiUrl = this.contactsCreateProdUS;
+        break;
+      case STAGING:
+        this.contactByCodeApiUrl = this.contactsByCodeStaging;
+        this.updateContactByIdUrl = this.contactsUpdateByIdStaging;
+        this.createContactApiUrl = this.contactsCreateStaging;
+        break;
+      case PROD:
+        this.contactByCodeApiUrl = this.contactsByCodeProd;
+        this.updateContactByIdUrl = this.contactsUpdateByIdProd;
+        this.createContactApiUrl = this.contactsCreateProd;
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + environment);
     }
   }
 

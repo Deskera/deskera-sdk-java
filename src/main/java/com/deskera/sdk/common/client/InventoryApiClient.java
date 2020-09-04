@@ -85,15 +85,14 @@ public class InventoryApiClient extends ApiClient {
             + Constants.EQUALS +
             SHIPMENT_DOCUMENT_STATUS.PARTIAL_SHIPPED + Constants.COMMA + Constants.STATUS
             + Constants.EQUALS +
-            SHIPMENT_DOCUMENT_STATUS.SHIPPED;
+            SHIPMENT_DOCUMENT_STATUS.SHIPPED + Constants.COMMA + Constants.DOCUMENT_SEQ_CODE
+            + Constants.NOT_NULL;
     final String pagedQuery =
         Constants.REQUEST_PARAM_JOIN + Constants.LIMIT + Constants.EQUALS + limit
             + Constants.REQUEST_PARAM_JOIN + Constants.PAGE + Constants.EQUALS + page
             + Constants.REQUEST_PARAM_JOIN + Constants.SORT + Constants.EQUALS +
             Constants.SHIP_BY_DATE + Constants.REQUEST_PARAM_JOIN + Constants.SORT_DIR
-            + Constants.EQUALS + Constants.SORT_DIR_DESC + Constants.REQUEST_PARAM_JOIN
-            + Constants.QUERY + Constants.EQUALS
-            + Constants.DOCUMENT_SEQ_CODE + Constants.NOT_NULL;
+            + Constants.EQUALS + Constants.SORT_DIR_DESC;
     final String endpoint = getQuery + pagedQuery;
 
     final HttpEntity<String> httpEntity = this.createHttpEntityWithHeaders(accessToken);
@@ -114,7 +113,8 @@ public class InventoryApiClient extends ApiClient {
             Constants.REQUEST_PARAM_JOIN + Constants.SORT + Constants.EQUALS
             + Constants.FULFILLMENT_DATE + Constants.REQUEST_PARAM_JOIN + Constants.SORT_DIR
             + Constants.EQUALS + Constants.SORT_DIR_DESC + Constants.REQUEST_PARAM_JOIN
-            + Constants.QUERY + Constants.EQUALS + Constants.NOT_NULL;
+            + Constants.QUERY + Constants.EQUALS + Constants.DOCUMENT_CODE + Constants.NOT_NULL +
+            Constants.COMMA + Constants.FULFILLMENT_DATE + Constants.NOT_NULL;
     final HttpEntity<String> httpEntity = this.createHttpEntityWithHeaders(accessToken);
     final ParameterizedTypeReference<RestResponsePage<FulfillmentResponse>> responseType = new
         ParameterizedTypeReference<RestResponsePage<FulfillmentResponse>>() {

@@ -24,6 +24,7 @@ public class FulfillmentDto {
   private String status;
   private Boolean autoFulfilled;
   private String fulfillmentDate;
+  private String documentDate;
   private FULFILLMENT_TYPE fulfillmentType;
   private String warehouseCode;
 

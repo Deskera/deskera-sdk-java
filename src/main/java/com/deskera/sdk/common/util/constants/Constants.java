@@ -52,6 +52,7 @@ public final class Constants {
   public static final String REQUEST_PARAM_QUERY = REQUEST_SEPARATOR+ "query" +EQUALS;
   public static final String QUERY = "query";
   public static final String DOCUMENT_SEQ_CODE = "documentSequenceCode";
+  public static final String DOCUMENT_CODE = "documentCode";
   public static final String STATUS = "status";
   public static final String COMMA = ",";
   public static final String REQUEST_PARAM_JOIN = "&";

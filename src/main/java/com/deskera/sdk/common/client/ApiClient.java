@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -137,4 +138,11 @@ public  class ApiClient extends EnvironmentEndpoints{
     }
     return String.format(sb.toString());
   }
+
+  protected HttpEntity getHttpEntityWithHeaders(@Nullable final Object body) {
+    final org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    return new HttpEntity(body, headers);
+  }
+
 }

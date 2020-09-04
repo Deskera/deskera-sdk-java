@@ -17,6 +17,9 @@ public class ApiConstants {
   public static final String IAM_API =
       VERSION_CONST + URL_SEPERATOR + IAM + URL_SEPERATOR + AUTH_CONST + URL_SEPERATOR;
   public static final String VALIDATE_TOKEN = IAM_API + "sign-in/login/status";
+  public static final String IAM_BASE = VERSION_CONST + URL_SEPERATOR + IAM + URL_SEPERATOR;
+  public static final String VALIDATE_REDIS_TOKEN = IAM_BASE + "token/app/validate";
+
 
   public static final String NATURE_ASSET = "ASSET";
   public static final String NATURE_EXPENSES = "EXPENSES";

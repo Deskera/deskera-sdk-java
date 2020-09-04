@@ -3,6 +3,7 @@ package com.deskera.sdk.common.client;
 import com.deskera.sdk.common.dto.ENVIRONMENT;
 import com.deskera.sdk.common.dto.auth.AuthenticationResultTypeDto;
 import com.deskera.sdk.common.dto.auth.OAuth2AccessToken;
+import com.deskera.sdk.common.dto.auth.RefreshTokenRequest;
 import com.deskera.sdk.common.dto.model.AuthorizationRequestResponse;
 import com.deskera.sdk.common.util.constants.ApiConstants;
 import java.util.Objects;
@@ -145,19 +146,38 @@ public class OAuth2PartnerClient extends ApiClient {
 
   public Boolean validateToken(final String token) {
     final String endpoint = this.deskeraApiHost +
-        com.deskera.sdk.common.dto.invoice.constants.ApiConstants.VALIDATE_TOKEN;
+        com.deskera.sdk.common.dto.invoice.constants.ApiConstants.VALIDATE_REDIS_TOKEN;
     final HttpEntity httpEntity = this.createHttpEntityWithHeaders(token);
     try {
       final ResponseEntity<AuthenticationResultTypeDto> responseEntity = (ResponseEntity<AuthenticationResultTypeDto>) this
           .createUrl(endpoint, httpEntity, AuthenticationResultTypeDto.class, HttpMethod.GET);
-      if (!HttpStatus.OK.equals(responseEntity.getStatusCode()) || Objects
-          .isNull(responseEntity.getBody())) {
+      if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
         return false;
       }
-    } catch (RestClientException exception) {
+    } catch (Exception exception) {
       return false;
     }
     return true;
   }
+
+  public AuthenticationResultTypeDto getAppRefreshToken(final String oldRefreshToken) {
+    final String endpoint = String
+        .format(this.deskeraApiHost + com.deskera.sdk.common.dto.invoice.constants.ApiConstants.IAM_API +
+            "app/getrefreshtoken");
+    RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest();
+    refreshTokenRequest.setRefreshToken(oldRefreshToken);
+    final HttpEntity httpEntity = this.getHttpEntityWithHeaders(refreshTokenRequest);
+    final ResponseEntity<AuthenticationResultTypeDto> responseEntity = (ResponseEntity<AuthenticationResultTypeDto>) this
+        .createUrl(
+            endpoint, httpEntity, AuthenticationResultTypeDto.class, HttpMethod.POST);
+    if (!HttpStatus.OK.equals(responseEntity.getStatusCode()) || Objects
+        .isNull(responseEntity.getBody())) {
+      throw new HttpClientErrorException(responseEntity.getStatusCode(),
+          "Could not generate Access token and Refresh token");
+    }
+    return responseEntity.getBody();
+  }
+
+
 
 }

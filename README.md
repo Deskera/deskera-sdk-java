@@ -10,20 +10,20 @@ Add the repository path in `pom.xml`
 
 ```xml
 <repositories>
-	<repository>
-		<id>repository.deskera</id>
-		<name>Deskera SDK Repository</name>
-		<url>https://nexus.deskera.com/repository/deskera-sdk-java-snapshot/</url>
-	</repository>
+  <repository>
+    <id>repository.deskera</id>
+    <name>Deskera SDK Repository</name>
+    <url>https://nexus.deskera.com/repository/deskera-sdk-java-snapshot/</url>
+  </repository>
 </repositories>
 ```
 
 Add the dependency
 ```xml
 <dependency>
-	<groupId>com.deskera.sdk.common</groupId>
-	<artifactId>deskera-sdk-java</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+  <groupId>com.deskera.sdk.common</groupId>
+  <artifactId>deskera-sdk-java</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
 

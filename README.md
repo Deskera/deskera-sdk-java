@@ -1,4 +1,4 @@
-# deskera-books-sdk-java
+# deskera-sdk-java
 
 This is Java SDK for [Deskera Books](https://www.deskera.com/books/)
 
